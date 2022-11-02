@@ -7,7 +7,7 @@
 
 # taken from ttps://github.com/actions-rs/ examples
 
-on: [push, pull_request]
+on: [workflow_call]
 
 name: Continuous integration
 
