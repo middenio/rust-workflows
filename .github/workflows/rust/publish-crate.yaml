@@ -1,0 +1,32 @@
+# ============================================================
+# Copyright (C) 2022 - Midden - All Rights Reserved
+# ============================================================
+#
+# Maintainer: John White <john@midden.io>
+# ============================================================
+
+on: 
+  workflow_call:
+    inputs:
+      crate_name:       
+        description: 'crate to build and publish'
+        required: true
+        type: string
+    secrets:
+      REGISTRY_NAME:
+        required: true
+      REGISTRY_AUTH_TOKEN:
+        required: true
+      REGISTRY_INDEX:
+        required: true
+
+name: Publish crate
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: -p ${{ github.events.inputs.crate_name }} --index ${{ secrets.REGISTRY_INDEX }} --registry=${{ secrets.REGISTRY_NAME }} --config "http.user-agent=shipyard-rs ${{ secrets.REGISTRY_AUTH_TOKEN }}" --config "net.git-fetch-with-cli = true"

@@ -1,0 +1,37 @@
+# ============================================================
+# Copyright (C) 2022 - Midden - All Rights Reserved
+# ============================================================
+#
+# Maintainer: John White <john@midden.io>
+# ============================================================
+
+on: 
+  workflow_call:
+    inputs:
+      crate_name:       
+        description: 'crate to build and publish'
+        required: true
+        type: string
+    secrets:
+      REGISTRY_AUTH_TOKEN:
+        required: true
+      REGISTRY_NAME:
+        required: true
+      REGISTRY_URI:
+        required: true
+
+name: generate release build and publish crate
+
+jobs:
+  build-release-publish:
+    runs-on: ubuntu-latest
+    steps:      
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: cargo build --release --all-features
+ 
+      - uses: ./.github/workflows/publish-crate.yaml@main
+        with:
+          crate: "${{ inputs.crate_name }}"      
