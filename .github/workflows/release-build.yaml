@@ -5,20 +5,7 @@
 # Maintainer: John White <john@midden.io>
 # ============================================================
 
-on: 
-  workflow_call:
-    inputs:
-      crate_name:       
-        description: 'crate to build and publish'
-        required: true
-        type: string
-    secrets:
-      REGISTRY_AUTH_TOKEN:
-        required: true
-      REGISTRY_NAME:
-        required: true
-      REGISTRY_URI:
-        required: true
+on: [workflow_call]
 
 name: generate release build and publish crate
 
@@ -31,8 +18,3 @@ jobs:
         with:
           toolchain: stable
       - run: cargo build --release --all-features
- 
-      - uses: middenio/rust-workflows/github/workflows/publish-crate.yaml@main
-        with:
-          crate: "${{ inputs.crate_name }}"      
-        
