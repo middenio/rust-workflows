@@ -40,4 +40,4 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: publish
-          args: -p ${{ matrix.crate_name }} --index ${{ secrets.REGISTRY_INDEX }} --registry=${{ secrets.REGISTRY_NAME }} --config "http.user-agent=shipyard-rs ${{ secrets.REGISTRY_AUTH_TOKEN }}" --config "net.git-fetch-with-cli = true"
+          args: -p ${{ matrix.crate_name }} --index ${{ secrets.REGISTRY_INDEX }} --registry=${{ secrets.REGISTRY_NAME }} --config "http.user-agent='shipyard-rs ${{ secrets.REGISTRY_AUTH_TOKEN }}'" --config "net.git-fetch-with-cli = true"
