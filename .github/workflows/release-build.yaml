@@ -4,11 +4,12 @@
 #
 # Maintainer: John White <john@midden.io>
 # ============================================================
+name: generate release build and publish crate(s)
 
 on: 
   workflow_call:
     inputs:
-      crate_name:       
+      crates:       
         description: 'crate to build and publish'
         required: true
         type: string
@@ -20,10 +21,8 @@ on:
       REGISTRY_INDEX:
         required: true
 
-name: generate release build and publish crate
-
 jobs:
-  build-release-and-publish-crate:
+  build-release:
     runs-on: ubuntu-latest
     steps:      
       - uses: actions/checkout@v2
@@ -31,7 +30,13 @@ jobs:
         with:
           toolchain: stable
       - run: cargo build --release --all-features
+  publish-workspace-crates:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        crate_name: ${{ fromJson(inputs.crates) }}
+    steps:
       - uses: actions-rs/cargo@v1
         with:
           command: publish
-          args: -p ${{ inputs.crate_name }} --index ${{ secrets.REGISTRY_INDEX }} --registry=${{ secrets.REGISTRY_NAME }} --config "http.user-agent=shipyard-rs ${{ secrets.REGISTRY_AUTH_TOKEN }}" --config "net.git-fetch-with-cli = true"
+          args: -p ${{ matrix.crate_name }} --index ${{ secrets.REGISTRY_INDEX }} --registry=${{ secrets.REGISTRY_NAME }} --config "http.user-agent=shipyard-rs ${{ secrets.REGISTRY_AUTH_TOKEN }}" --config "net.git-fetch-with-cli = true"
