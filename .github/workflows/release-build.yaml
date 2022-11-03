@@ -32,6 +32,7 @@ jobs:
           toolchain: stable
       - run: cargo build --release --all-features
  
-      - uses: ./.github/workflows/publish-crate.yaml@main
+      - uses: middenio/rust-workflows/github/workflows/publish-crate.yaml@main
         with:
           crate: "${{ inputs.crate_name }}"      
+        
