@@ -10,7 +10,7 @@ on: [workflow_call]
 name: generate release build and publish crate
 
 jobs:
-  build-release:
+  build-release-and-publish-crate:
     runs-on: ubuntu-latest
     steps:      
       - uses: actions/checkout@v2
@@ -18,3 +18,7 @@ jobs:
         with:
           toolchain: stable
       - run: cargo build --release --all-features
+      - uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: -p ${{ github.events.inputs.crate_name }} --index ${{ secrets.REGISTRY_INDEX }} --registry=${{ secrets.REGISTRY_NAME }} --config "http.user-agent=shipyard-rs ${{ secrets.REGISTRY_AUTH_TOKEN }}" --config "net.git-fetch-with-cli = true"
