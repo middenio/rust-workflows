@@ -10,7 +10,7 @@ on: [workflow_call]
 name: generate release build and publish crate
 
 jobs:
-  build-release-publish:
+  build-release:
     runs-on: ubuntu-latest
     steps:      
       - uses: actions/checkout@v2
